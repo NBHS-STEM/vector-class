@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 
 class Vector:
@@ -8,41 +9,40 @@ class Vector:
     """
 
     def __init__(self, *components):
-        self.components = components
+        self.components = np.array(components)
 
     def __repr__(self):
-        return f'Vector{self.components}'
+        return f'Vector{tuple(self.components)}'
 
     def __eq__(self, other):
         return self.components == other.components
 
     def __abs__(self):
         """ Returns L2 (Euclidean) Norm """
-        return math.sqrt(sum([c**2 for c in self.components]))
+        return math.sqrt(sum(self.components ** 2))
 
     def __bool__(self):
         return bool(abs(self))
 
     def __add__(self, other):
         """ Returns component-wise sum as a Vector """
-        comp_sums = [sum(pair) for pair in zip(self.components, other.components)]
-        return Vector(*comp_sums)
+        return self + other
 
     def __mul__(self, other):
         """ Returns dot product """
-        return sum([a*b for a, b in zip(self.components, other.components)])
+        return sum(self * other)
 
     def __rmul__(self, other):
         """ Supports (left) scalar multiplication """
-        return Vector(self.x * other, self.y * other)
+        return other * self
 
     def __neg__(self):
         """ Unary minus support """
-        return Vector(-self.x, -self.y)
+        return Vector(* -self.components)
 
     def __sub__(self, other):
         """ Returns component-wise difference as a Vector """
-        return self + -other
+        return self - other
 
 
 def angle(a: Vector, b: Vector, degrees=True) -> float:
